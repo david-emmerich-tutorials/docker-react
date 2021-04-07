@@ -1,0 +1,11 @@
+FROM node:alpine
+RUN mkdir /home/node/app && chown -R node:node /home/node
+WORKDIR /home/node/app
+USER node
+COPY ./package.json ./
+RUN npm install
+COPY ./ ./
+CMD ["npm", "run", "build"]
+
+FROM nginx
+COPY --from=0 /home/node/app/build /usr/share/nginx/html
